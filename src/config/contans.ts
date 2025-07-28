@@ -1,0 +1,1 @@
+export const API_KEY = 'the-goat-api-key';

@@ -20,33 +20,13 @@ enum TaskStatus {
   COMPLETADA
 }
 
-
-model User {
-  id        String   @id @default(cuid())
-  username  String   @unique
-  password  String
-  task     Task[]
-  roles     Roles[] @relation("UserRoles")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-
-model Roles {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  users     User[]   @relation("UserRoles")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Task {
-  id        String   @id @default(cuid())
-  title     String
-  status    TaskStatus @default(PENDIENTE)// e.g., "pendiente", "en progreso", "completada"
-  completed Boolean  @default(false)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  status      TaskStatus @default(PENDIENTE)
+  completed   Boolean    @default(false)
+  fecha       DateTime   @default(now())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
