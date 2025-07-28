@@ -1,30 +1,39 @@
 version: '3.8'
 
-
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17
     container_name: tareas-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: tareas_user
-      POSTGRES_PASSWORD: tareas_pass
-      POSTGRES_DB: tareas_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5431:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: tareas_app
     environment:
-      DATABASE_URL: postgres://tareas_user:tareas_pass@postgres:5432/tareas_db
-      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: ${PORT}
     ports:
       - "3000:3000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
