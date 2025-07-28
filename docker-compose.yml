@@ -1,0 +1,19 @@
+version: '3.8'
+
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: tareas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tareas_user
+      POSTGRES_PASSWORD: tareas_pass
+      POSTGRES_DB: tareas_db
+    ports:
+      - "5431:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
