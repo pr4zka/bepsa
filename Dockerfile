@@ -13,14 +13,10 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the application files
 COPY . .
 
-# Generate Prisma Client for the container environment
-RUN npx prisma generate
-
 # Build the NestJS application
 RUN npm run build
 
 # Expose the application port
 EXPOSE 3000
 
-# Comando para iniciar prisma y levantar la aplicación
-CMD ["sh", "-c", "npm run db:deploy && npm run start"]
+CMD ["sh", "-c", "npm run db:deploy && npm run start:dev"]
