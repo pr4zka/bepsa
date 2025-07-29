@@ -31,9 +31,9 @@ export class TareaRepositoryPrisma implements TareaRepository {
         ))
     }
 
-    async findById(id: number): Promise<Tarea | null> {
+    async findById(id: string): Promise<Tarea | null> {
         const task = await this.prisma.task.findUnique({
-            where: { id: id.toString() }
+            where: { id: id }
         })
 
         if (!task) return null
@@ -92,9 +92,9 @@ export class TareaRepositoryPrisma implements TareaRepository {
         )
     }
 
-    async delete(id: number): Promise<void> {
+    async delete(id: string): Promise<void> {
         await this.prisma.task.delete({
-            where: { id: id.toString() }
+            where: { id: id }
         })
     }
 }

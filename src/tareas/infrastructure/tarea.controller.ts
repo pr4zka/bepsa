@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Query, UseGuards, Body, BadRequestException, HttpException, InternalServerErrorException } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Param, Query, UseGuards, Body, BadRequestException, HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody, ApiSecurity } from '@nestjs/swagger'
 import { CreateTareaUseCase } from '../application/create-tarea.use.case'
 import { UpdateTareaUseCase } from '../application/update-tarea-status.use-case'
@@ -167,10 +167,30 @@ export class TareaController {
     @ApiResponse({ status: 401, description: 'API Key inválida o faltante' })
     @ApiResponse({ status: 404, description: 'Tarea no encontrada' })
     async actualizarEstado(@Param('id') id: string, @Body() body: UpdateTareaStatusDto) {
-        const data: UpdateTareaStatusData = {
-            id,
-            status: body.status
+        try {
+            const data: UpdateTareaStatusData = {
+                id,
+                status: body.status
+            }
+            return await this.actualizarUC.execute(data);
+        } catch (error) {
+            if (error.message?.includes('no existe')) {
+                throw new NotFoundException('Tarea no encontrada');
+            }
+            
+            if (error.message?.includes('ya tiene el estado')) {
+                throw new BadRequestException(error.message);
+            }
+            
+            if (error.code === 'P2025') {
+                throw new NotFoundException('Tarea no encontrada');
+            }
+            
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            
+            throw new InternalServerErrorException('Error al actualizar la tarea');
         }
-        return this.actualizarUC.execute(data)
     }
 }

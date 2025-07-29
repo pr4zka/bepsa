@@ -18,8 +18,8 @@ export interface Filtros {
 
 export interface TareaRepository {
     findAll(filtro?: Filtros): Promise<Tarea[]>
-    findById(id: number): Promise<Tarea | null>
+    findById(id: string): Promise<Tarea | null>
     create(data: CreateTareaData): Promise<Tarea>
     update(tarea: UpdateTareaStatusData): Promise<Tarea>
-    delete(id: number): Promise<void>
+    delete(id: string): Promise<void>
 }
