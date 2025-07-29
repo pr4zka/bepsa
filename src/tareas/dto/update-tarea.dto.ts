@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { TareaStatus } from '../../domain/tarea-status.enum';
+import { TareaStatus } from '../domain/tarea-status.enum';
 
 export class UpdateTareaStatusDto {
     @ApiProperty({
